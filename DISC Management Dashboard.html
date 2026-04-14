@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>DISC 管理后台</title>
+    <style>
+        body{padding:30px;max-width:900px;margin:0 auto;font-family: Arial,"Microsoft YaHei"}
+        .btn{padding:10px 20px;background:#409eff;color:#fff;border:none;border-radius:8px;margin:10px 5px}
+        .btn:disabled{background:#ccc !important; cursor:not-allowed}
+        .del{background:#f56c6c}
+        .item{padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+        input{padding:8px;margin:5px;border:1px solid #ddd;border-radius:6px}
+        .login{max-width:400px;margin:50px auto;padding:30px;background:#f7f8fa;border-radius:12px}
+        .login input{width:100%;margin-bottom:15px}
+        .hide{display:none !important}
+        .admin-manager{background:#f9f9f9;padding:15px;border-radius:8px;margin:15px 0}
+        .confirm-box{
+            position:fixed;top:0;left:0;width:100%;height:100%;
+            background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;
+            z-index:9999
+        }
+        .confirm-body{
+            background:#fff;padding:30px;border-radius:12px;max-width:360px;text-align:center
+        }
+    </style>
+</head>
+<body>
+
+<!-- 登录界面 -->
+<div id="loginPage" class="login">
+    <h2>管理员登录</h2>
+    <input type="text" id="username" placeholder="请输入管理员账号">
+    <button class="btn" onclick="login()">登录</button>
+</div>
+
+<!-- 管理主页 -->
+<div id="adminPage" class="hide">
+    <h2>DISC 管理后台</h2>
+    <button class="btn del" onclick="logout()">退出登录 / 切换账号</button>
+
+    <!-- 超级管理员：laurieye 专用 - 新增子账号 -->
+    <div id="adminManager" class="admin-manager hide">
+        <h3>账号管理（仅超级管理员可见）</h3>
+        <input type="text" id="newAdmin" placeholder="输入新管理员账号">
+        <button class="btn" onclick="addAdmin()">添加管理员</button>
+        <div id="adminList"></div>
+    </div>
+
+    <input type="text" id="title" placeholder="本次活动标题（例如：销售部测评）" style="width:220px">
+    <input type="number" id="maxCount" placeholder="邀请填写人数上限" value="10" style="width:160px">
+    <button class="btn" onclick="createCode()">生成6位数字邀请码</button>
+
+    <div style="margin:15px 0">
+        <select id="filterCode" style="padding:8px;width:200px">
+            <option value="">导出全部数据</option>
+        </select>
+        <button class="btn" onclick="exportSelectedExcel()">筛选导出Excel</button>
+        <button class="btn del" onclick="clearAllAnswers()">清空所有答卷数据</button>
+    </div>
+
+    <div id="codeList"></div>
+</div>
+
+<!-- 3秒倒计时确认框 -->
+<div id="confirmDelete" class="confirm-box hide">
+    <div class="confirm-body">
+        <h3>⚠️ 危险操作</h3>
+        <p id="confirmText"></p>
+        <p style="color:red;font-weight:bold" id="countDown"></p>
+        <button id="confirmBtn" class="btn del" disabled>请等待 3 秒</button>
+        <button class="btn" onclick="closeConfirm()">取消删除</button>
+    </div>
+</div>
+
+<script>
+// 超级管理员
+const SUPER_ADMIN = "laurieye";
+let currentUser = "";
+let deleteTarget = null;
+
+// 初始化默认账号
+function initAdmins() {
+    let admins = JSON.parse(localStorage.getItem("admins") || '["laurieye","teresazhan"]');
+    localStorage.setItem("admins", JSON.stringify(admins));
+    return admins;
+}
+
+// 登录
+function login() {
+    let u = document.getElementById("username").value.trim();
+    let admins = initAdmins();
+    if (admins.includes(u)) {
+        currentUser = u;
+        document.getElementById("loginPage").classList.add("hide");
+        document.getElementById("adminPage").classList.remove("hide");
+        
+        if (currentUser === SUPER_ADMIN) {
+            document.getElementById("adminManager").classList.remove("hide");
+        } else {
+            document.getElementById("adminManager").classList.add("hide");
+        }
+
+        renderAdmins();
+        renderCodes();
+        buildFilterSelect();
+    } else {
+        alert("账号错误，无权限登录");
+    }
+}
+
+// 退出登录
+function logout() {
+    currentUser = "";
+    document.getElementById("adminPage").classList.add("hide");
+    document.getElementById("loginPage").classList.remove("hide");
+    document.getElementById("username").value = "";
+}
+
+// 添加管理员（仅超级管理员）
+function addAdmin() {
+    if (currentUser !== SUPER_ADMIN) {
+        alert("无权限");
+        return;
+    }
+
+    let newAdmin = document.getElementById("newAdmin").value.trim();
+    if (!newAdmin) { alert("请输入账号"); return; }
+    let admins = initAdmins();
+    if (admins.includes(newAdmin)) { alert("已存在"); return; }
+    admins.push(newAdmin);
+    localStorage.setItem("admins", JSON.stringify(admins));
+    renderAdmins();
+    document.getElementById("newAdmin").value = "";
+}
+
+// 渲染管理员列表
+function renderAdmins() {
+    if (currentUser !== SUPER_ADMIN) return;
+    
+    let admins = JSON.parse(localStorage.getItem("admins"));
+    let html = "";
+    admins.forEach(a => {
+        if (a === SUPER_ADMIN) return;
+        html += `<div class="item">${a} <button class="btn del" onclick="showDeleteConfirm('${a}')">删除并清空其所有数据</button></div>`;
+    });
+    document.getElementById("adminList").innerHTML = html;
+}
+
+// 显示删除确认框（带3秒倒计时）
+function showDeleteConfirm(admin) {
+    if (currentUser !== SUPER_ADMIN) return;
+    deleteTarget = admin;
+    document.getElementById("confirmText").innerHTML =
+        `确定删除管理员：<strong>${admin}</strong><br>
+        其所有邀请码、答卷数据将全部删除失效！`;
+    document.getElementById("confirmDelete").classList.remove("hide");
+    startCountDown();
+}
+
+// 关闭确认框
+function closeConfirm() {
+    document.getElementById("confirmDelete").classList.add("hide");
+    deleteTarget = null;
+}
+
+// 3秒倒计时（精准、干净）
+function startCountDown() {
+    let sec = 3;
+    let btn = document.getElementById("confirmBtn");
+    let tip = document.getElementById("countDown");
+    
+    btn.disabled = true;
+    btn.textContent = "请等待 3 秒";
+    tip.textContent = "";
+
+    let timer = setInterval(() => {
+        sec--;
+        if (sec <= 0) {
+            clearInterval(timer);
+            btn.disabled = false;
+            btn.textContent = "确认删除";
+            tip.textContent = "";
+        } else {
+            tip.textContent = `请等待 ${sec} 秒后再确认`;
+        }
+    }, 1000);
+}
+
+// 确认删除：删除管理员 + 清空所有数据
+document.getElementById("confirmBtn").onclick = function(){
+    if(!deleteTarget) return;
+    let admin = deleteTarget;
+
+    // 1. 删除账号
+    let admins = JSON.parse(localStorage.getItem("admins"));
+    admins = admins.filter(a => a !== admin);
+    localStorage.setItem("admins", JSON.stringify(admins));
+
+    // 2. 删除该管理员创建的所有邀请码
+    let codes = JSON.parse(localStorage.getItem("inviteCodes") || "{}");
+    for (let c in codes) {
+        if (codes[c].creator === admin) delete codes[c];
+    }
+    localStorage.setItem("inviteCodes", JSON.stringify(codes));
+
+    // 3. 删除该管理员名下所有答卷
+    let answers = JSON.parse(localStorage.getItem("answers") || "[]");
+    answers = answers.filter(a => a.creator !== admin);
+    localStorage.setItem("answers", JSON.stringify(answers));
+
+    alert("管理员已删除，其所有邀请码 & 数据已全部清空失效");
+    closeConfirm();
+    renderAdmins();
+    renderCodes();
+    buildFilterSelect();
+}
+
+// 生成邀请码（绑定创建人）
+function createCode() {
+    let title = document.getElementById("title").value || "未命名活动";
+    let max = parseInt(document.getElementById("maxCount").value) || 10;
+    let code = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join("");
+    let codes = JSON.parse(localStorage.getItem("inviteCodes") || "{}");
+    codes[code] = { title, max, used: 0, creator: currentUser };
+    localStorage.setItem("inviteCodes", JSON.stringify(codes));
+    renderCodes();
+    buildFilterSelect();
+}
+
+// 渲染邀请码（仅看自己的，超级管理员看全部）
+function renderCodes() {
+    let codes = JSON.parse(localStorage.getItem("inviteCodes") || "{}");
+    let html = "";
+    for (let c in codes) {
+        if (currentUser !== SUPER_ADMIN && codes[c].creator !== currentUser) continue;
+        
+        html += `
+        <div class="item">
+            <div>
+                <strong>${codes[c].title}</strong> | 邀请码：${c} | 上限：${codes[c].max} | 已用：${codes[c].used} | 创建人：${codes[c].creator}
+            </div>
+            <button class="btn del" onclick="deleteCodeAndData('${c}')">删除码+数据</button>
+        </div>`;
+    }
+    document.getElementById("codeList").innerHTML = html;
+}
+
+// 删除邀请码 + 同时删除该码所有数据
+function deleteCodeAndData(code) {
+    if (!confirm("确定删除此邀请码？该码下所有答卷将一并删除！")) return;
+    let codes = JSON.parse(localStorage.getItem("inviteCodes") || "{}");
+    delete codes[code];
+    localStorage.setItem("inviteCodes", JSON.stringify(codes));
+
+    let answers = JSON.parse(localStorage.getItem("answers") || "[]");
+    answers = answers.filter(a => a.code !== code);
+    localStorage.setItem("answers", JSON.stringify(answers));
+
+    renderCodes();
+    buildFilterSelect();
+}
+
+// 筛选下拉框
+function buildFilterSelect() {
+    let codes = JSON.parse(localStorage.getItem("inviteCodes") || "{}");
+    let sel = document.getElementById("filterCode");
+    sel.innerHTML = `<option value="">导出全部数据</option>`;
+    for (let c in codes) {
+        if (currentUser !== SUPER_ADMIN && codes[c].creator !== currentUser) continue;
+        sel.innerHTML += `<option value="${c}">${codes[c].title} (${c})</option>`;
+    }
+}
+
+// 筛选导出（仅自己的数据）
+function exportSelectedExcel() {
+    let selectedCode = document.getElementById("filterCode").value;
+    let answers = JSON.parse(localStorage.getItem("answers") || "[]");
+
+    let filtered = answers.filter(a => {
+        if (currentUser !== SUPER_ADMIN && a.creator !== currentUser) return false;
+        if (selectedCode && a.code !== selectedCode) return false;
+        return true;
+    });
+
+    let csv = "活动标题,邀请码,姓名,D,I,S,C,创建人,填写时间\n";
+    filtered.forEach(a => {
+        csv += `${a.title},${a.code},${a.name},${a.D},${a.I},${a.S},${a.C},${a.creator},${a.time}\n`;
+    });
+
+    let blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = selectedCode ? `DISC_${selectedCode}.csv` : "DISC全部数据.csv";
+    a.click();
+}
+
+// 清空所有答卷
+function clearAllAnswers() {
+    if (!confirm("确定清空所有答卷？不可恢复！")) return;
+    localStorage.removeItem("answers");
+    alert("已清空");
+}
+</script>
+</body>
+</html>
