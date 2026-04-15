@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>晓婉 | 个人介绍</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            scroll-behavior: smooth; /* 平滑滚动 */
+        }
+
+        /* 马卡龙渐变背景 */
+        body {
+            background: linear-gradient(120deg, #f9f7fb, #e8f4f8, #f5fafe);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏样式 */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(200, 220, 240, 0.3);
+        }
+
+        /* 左上角只保留晓婉 */
+        .logo {
+            font-size: 22px;
+            font-weight: 600;
+            color: #5d6a8f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo .chinese-name {
+            font-size: 24px;
+            color: #5d6a8f;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #5d6a8f;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover {
+            color: #7992b5;
+            border-bottom: 2px solid #f2e8f5;
+        }
+
+        /* 容器样式 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 50px 50px;
+        }
+
+        /* 英雄区样式 */
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            margin-bottom: 80px;
+        }
+
+        /* 马卡龙圆形装饰 */
+        .hero::before, .hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        .hero::before {
+            width: 400px;
+            height: 400px;
+            background: #f2e8f5;
+            top: 20%;
+            right: 10%;
+        }
+
+        .hero::after {
+            width: 350px;
+            height: 350px;
+            background: #e8f4f8;
+            bottom: 10%;
+            left: 10%;
+        }
+
+        /* 封面姓名排版优化 - Laurie改为黑色 */
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .hero h1 .english-part {
+            font-size: 56px;
+            color: #333; /* 改为黑色 */
+        }
+        .hero h1 .chinese-part {
+            font-size: 64px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .tag-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-tag {
+            padding: 10px 20px;
+            background: #ffffff;
+            border-radius: 30px;
+            font-size: 16px;
+            color: #5d6a8f;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 40px;
+            width: 30px;
+            height: 50px;
+            border: 2px solid #8892b0;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            padding-top: 8px;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-down::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #8892b0;
+            border-radius: 50%;
+        }
+
+        /* 板块通用样式 */
+        section {
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #5d6a8f;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #f2e8f5;
+            border-radius: 3px;
+        }
+
+        /* 关于板块 */
+        .about {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: #f9f7fb;
+            border-radius: 12px;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: #5d6a8f;
+            min-width: 80px;
+        }
+
+        /* 技能板块 - 可爱卡片样式 */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .skill-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 卡片顶部小色块 */
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+        }
+
+        .skill-card:nth-child(1)::before {
+            background: #87e8de; /* 薄荷绿 */
+        }
+
+        .skill-card:nth-child(2)::before {
+            background: #ffe887; /* 浅黄 */
+        }
+
+        .skill-card:nth-child(3)::before {
+            background: #ffb6c1; /* 浅粉 */
+        }
+
+        .skill-card:nth-child(4)::before {
+            background: #87cefa; /* 浅蓝 */
+        }
+
+        .skill-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #7992b5;
+        }
+
+        .skill-card h3 {
+            font-size: 20px;
+            color: #5d6a8f;
+            margin-bottom: 20px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .skill-tag {
+            padding: 6px 12px;
+            background: #f2e8f5;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #7992b5;
+        }
+
+        /* 教育背景新样式（参考p2） */
+        .education-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .education-container::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #87e8de;
+        }
+
+        .education-item {
+            position: relative;
+            margin-bottom: 40px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+        }
+
+        .education-item::before {
+            content: '';
+            position: absolute;
+            left: -50px;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 4px solid #87e8de;
+        }
+
+        .education-date {
+            color: #8892b0;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .education-title {
+            font-size: 22px;
+            color: #5d6a8f;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .education-subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .education-awards {
+            background: #f9f7fb;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .education-awards ul {
+            padding-left: 20px;
+            color: #666;
+        }
+
+        .education-awards li {
+            margin-bottom: 8px;
+        }
+
+        /* 实习经历新样式（参考p1） */
+        .experience-list {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .experience-card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            position: relative;
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .experience-position {
+            font-size: 18px;
+            font-weight: 600;
+            color: #5d6a8f;
+        }
+
+        .experience-date {
+            background: #e8f4f8;
+            color: #7992b5;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .experience-company {
+            color: #8892b0;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .experience-content ul {
+            padding-left: 20px;
+            color: #666;
+        }
+
+        .experience-content li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 5px;
+        }
+
+        .experience-content li::marker {
+            color: #87e8de;
+        }
+
+        /* 作品板块 */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .portfolio-item {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            transition: transform 0.3s ease;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .portfolio-item h4 {
+            color: #5d6a8f;
+            margin-bottom: 10px;
+        }
+
+        .portfolio-item p {
+            color: #8892b0;
+            font-size: 14px;
+        }
+
+        /* 联系板块 - 调整颜色提升可读性 */
+        .contact {
+            background: linear-gradient(120deg, #d4f1f9, #c6e9e0);
+            padding: 80px 0;
+            border-radius: 30px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* 联系我标题调整为深色，提升可读性 */
+        .contact h2 {
+            color: #4a6b8b;
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .contact p {
+            color: #5d6a8f;
+            font-size: 18px;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            color: #5d6a8f;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-link:hover {
+            background: #ffffff;
+            transform: translateY(-3px);
+        }
+
+        /* 动画效果 */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(10px);
+            }
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 48px;
+                flex-direction: column;
+                gap: 5px;
+            }
+            .hero h1 .english-part,
+            .hero h1 .chinese-part {
+                font-size: 48px;
+            }
+            
+            .education-container {
+                padding-left: 30px;
+            }
+            
+            .education-item::before {
+                left: -30px;
+            }
+            
+            .experience-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 - 只保留晓婉 -->
+    <nav>
+        <div class="logo">
+            <span class="chinese-name">晓婉</span>
+        </div>
+        <div class="nav-links">
+            <a href="#about">关于</a>
+            <a href="#education">教育</a>
+            <a href="#skills">技能</a>
+            <a href="#experience">经历</a>
+            <a href="#portfolio">作品</a>
+            <a href="#contact">联系</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 英雄区 - Laurie改为黑色 -->
+        <div class="hero">
+            <h1>
+                <span class="english-part">Laurie</span>
+                <span class="chinese-part">叶晓婉</span>
+            </h1>
+            <p>培训实习生 | 人力资源管理 | 26届应届生</p>
+            <div class="tag-group">
+                <div class="hero-tag">培训项目管理</div>
+                <div class="hero-tag">数字化工具落地</div>
+                <div class="hero-tag">内容创作</div>
+                <div class="hero-tag">数据分析</div>
+            </div>
+            <div class="scroll-down"></div>
+        </div>
+
+        <!-- 关于板块 -->
+        <section id="about" class="about-section">
+            <h2 class="section-title">关于我</h2>
+            <div class="about">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="fas fa-user skill-icon" style="font-size: 20px;"></i>
+                        <div>
+                            <span class="info-label">姓名：</span>叶晓婉
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-user skill-icon" style="font-size: 20px;"></i>
+                        <div>
+                            <span class="info-label">年龄：</span>22岁
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-graduation-cap skill-icon" style="font-size: 20px;"></i>
+                        <div>
+                            <span class="info-label">院校：</span>广州工商学院
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-ranking-star skill-icon" style="font-size: 20px;"></i>
+                        <div>
+                            <span class="info-label">成绩：</span>4/133 年级前3%
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt skill-icon" style="font-size: 20px;"></i>
+                        <div>
+                            <span class="info-label">意向城市：</span>深圳 / 广州
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-calendar-check skill-icon" style="font-size: 20px;"></i>
+                        <div>
+                            <span class="info-label">到岗时间：</span>一个月内
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 教育板块 -->
+        <section id="education" class="education-section">
+            <h2 class="section-title">教育背景</h2>
+            <div class="education-container">
+                <div class="education-item">
+                    <div class="education-date">2022.09 - 2026.06</div>
+                    <div class="education-title">广州工商学院</div>
+                    <div class="education-subtitle">人力资源管理 本科 | 年级排名 4/133</div>
+                    <div class="education-awards">
+                        <ul>
+                            <li>连续三年获校级奖学金</li>
+                            <li>A类国家级竞赛奖项5项（金砖数字人力竞赛国二、24年市场调研大赛省一、两年工程实践与创新能力大赛省三等）</li>
+                            <li>C类竞赛奖项1项（"踏瑞杯"人力综合管理竞赛全国三等奖）</li>
+                            <li>普刊第一作者论文1篇</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 技能板块 -->
+        <section id="skills" class="skills-section">
+            <h2 class="section-title">技能能力</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <h3>办公技能</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Excel高级函数</span>
+                        <span class="skill-tag">Word文档</span>
+                        <span class="skill-tag">PPT制作</span>
+                        <span class="skill-tag">SPSS</span>
+                        <span class="skill-tag">企业微信</span>
+                        <span class="skill-tag">飞书</span>
+                        <span class="skill-tag">AI学习力</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>美工设计</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">可画</span>
+                        <span class="skill-tag">创客贴</span>
+                        <span class="skill-tag">海报设计</span>
+                        <span class="skill-tag">文案撰写</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fas fa-clapperboard"></i>
+                    </div>
+                    <h3>内容创作</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">推文制作</span>
+                        <span class="skill-tag">视频剪辑</span>
+                        <span class="skill-tag">剪映</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fas fa-chart-column"></i>
+                    </div>
+                    <h3>数据分析</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">问卷设计</span>
+                        <span class="skill-tag">多维表格</span>
+                        <span class="skill-tag">CDA在考</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 实习经历 - 改为部长 -->
+        <section id="experience" class="experience-section">
+            <h2 class="section-title">实习经历</h2>
+            <div class="experience-list">
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <div class="experience-position">培训实习生</div>
+                        <div class="experience-date">2026.01 - 至今</div>
+                    </div>
+                    <div class="experience-company">北京水滴科技集团 · 深蓝保事业部</div>
+                    <div class="experience-content">
+                        <ul>
+                            <li>培训项目统筹：协助落地培训12场，管理2个场地排期与物料；主要跟进5期新人班全流程，覆盖280+人次</li>
+                            <li>课程内容建设：维护企业培训后台50+门课程；独立撰写培训月度回顾推文4篇，完成视频剪辑及海报设计</li>
+                            <li>流程标准化：梳理实习生工作SOP，将重复性操作标准化，优化后使实习工作流程效率50%+</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <div class="experience-position">培训数据分析与自动化工具搭建</div>
+                        <div class="experience-date">2026.01 - 至今</div>
+                    </div>
+                    <div class="experience-company">独立项目 | 项目负责人</div>
+                    <div class="experience-content">
+                        <ul>
+                            <li>针对销售部门月度大会培训需求，发现传统人力盘点数据核对耗时1h+，独立搭建飞书多维表格识别支持系统（400+记录×23字段）</li>
+                            <li>设计培训签到自动登记系统，将原本1分钟/人的审核培训课程压减至整体1分钟内，提升培训运营效率60%</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <div class="experience-position">核心成员</div>
+                        <div class="experience-date">2024.09 - 2026.06</div>
+                    </div>
+                    <div class="experience-company">人力资源管理协会</div>
+                    <div class="experience-content">
+                        <ul>
+                            <li><strong>培训部部长</strong>（2024.09-2025.08）：从0-1构建人力沙盘赛事体系，组织53场强化训练覆盖110人，带队获国家级二等奖</li>
+                            <li><strong>媒策部部长</strong>（2025.09-2026.06）：创办协会公众号，5个月发布10篇推文，积累253名粉丝，总阅读量1730+</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 作品板块 -->
+        <section id="portfolio" class="portfolio-section">
+            <h2 class="section-title">作品集</h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <i class="fas fa-image skill-icon"></i>
+                    <h4>海报设计</h4>
+                    <p>协会招新/赛事宣传/培训证书/推文封面</p>
+                </div>
+                <div class="portfolio-item">
+                    <i class="fas fa-file-alt skill-icon"></i>
+                    <h4>公众号推文</h4>
+                    <p>5个月10篇原创内容</p>
+                </div>
+                <div class="portfolio-item">
+                    <i class="fas fa-video skill-icon"></i>
+                    <h4>视频剪辑</h4>
+                    <p>培训宣传物料制作</p>
+                </div>
+                <div class="portfolio-item">
+                    <i class="fas fa-search skill-icon"></i>
+                    <h4>市场调研</h4>
+                    <p>充电桩/预制菜/乙女游戏消费意愿调研</p>
+                </div>
+                <div class="portfolio-item">
+                    <i class="fas fa-table skill-icon"></i>
+                    <h4>数据分析</h4>
+                    <p>绩效/薪酬/沙盘/人力盘点可视化</p>
+                </div>
+                <div class="portfolio-item">
+                    <i class="fas fa-bullhorn skill-icon"></i>
+                    <h4>宣传物料</h4>
+                    <p>三折页/易拉宝设计</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系板块 -->
+        <section id="contact" class="contact">
+            <h2>联系我</h2>
+            <p>期待与您交流</p>
+            <div class="contact-links">
+                <a href="tel:19047120471" class="contact-link">
+                    <i class="fas fa-phone"></i>
+                    19047120471
+                </a>
+                <a href="mailto:1361663654@qq.com" class="contact-link">
+                    <i class="fas fa-envelope"></i>
+                    1361663654@qq.com
+                </a>
+                <a href="https://github.com/laurieye1011" target="_blank" class="contact-link">
+                    <i class="fab fa-github"></i>
+                    laurieye1011
+                </a>
+                <a href="javascript:void(0)" class="contact-link">
+                    <i class="fab fa-weixin"></i>
+                    VX：QQIwen0471
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 滚动浮现动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有板块
+            const sections = document.querySelectorAll('section');
+            
+            // 监听滚动事件
+            window.addEventListener('scroll', function() {
+                sections.forEach(section => {
+                    // 获取板块顶部位置
+                    const sectionTop = section.getBoundingClientRect().top;
+                    // 当板块进入视口时添加visible类
+                    if (sectionTop < window.innerHeight * 0.8) {
+                        section.classList.add('visible');
+                    }
+                });
+            });
+
+            // 初始触发一次，显示首屏内容
+            window.dispatchEvent(new Event('scroll'));
+
+            // 导航栏滚动效果
+            window.addEventListener('scroll', function() {
+                const nav = document.querySelector('nav');
+                if (window.scrollY > 50) {
+                    nav.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
+                } else {
+                    nav.style.boxShadow = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
