@@ -138,7 +138,17 @@
         .hero p {
             font-size: 20px;
             color: #666;
-            margin-bottom: 40px;
+            margin-bottom: 10px;
+        }
+        /* AI Slogan样式 */
+        .ai-slogan {
+            font-size: 18px;
+            color: #7992b5;
+            font-weight: 500;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.6);
+            padding: 8px 20px;
+            border-radius: 20px;
         }
 
         .tag-group {
@@ -261,6 +271,16 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.04);
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        /* 卡片hover动效增强 */
+        .skill-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+        }
+        .skill-card:hover .skill-icon {
+            transform: rotate(5deg);
+            color: #87e8de;
         }
 
         /* 卡片顶部小色块 */
@@ -293,6 +313,7 @@
             font-size: 40px;
             margin-bottom: 15px;
             color: #7992b5;
+            transition: all 0.3s ease;
         }
 
         .skill-card h3 {
@@ -314,6 +335,78 @@
             border-radius: 20px;
             font-size: 14px;
             color: #7992b5;
+        }
+        /* AI辅助标签样式 */
+        .ai-tag {
+            background: #e8f4f8;
+            color: #4a6b8b;
+            font-weight: 500;
+            border: 1px solid #87e8de;
+        }
+
+        /* AI能力专区样式 */
+        .ai-section {
+            background: linear-gradient(135deg, #f0f8fb, #eaf6fa);
+            padding: 60px 40px;
+            border-radius: 20px;
+            margin-bottom: 100px;
+        }
+        .ai-project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .ai-project-card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+            border-left: 4px solid #87e8de;
+        }
+        .ai-project-card h4 {
+            font-size: 18px;
+            color: #5d6a8f;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-project-card h4 i {
+            color: #87e8de;
+        }
+        .ai-project-desc {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        .ai-project-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #7992b5;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 5px 10px;
+            background: #f9f7fb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .ai-project-link:hover {
+            background: #e8f4f8;
+            color: #4a6b8b;
+        }
+        .ai-project-problem {
+            background: #fff5f5;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        .ai-project-problem strong {
+            color: #e53e3e;
+            font-size: 13px;
         }
 
         /* 教育背景新样式（参考p2） */
@@ -404,6 +497,11 @@
             padding: 30px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.04);
             position: relative;
+            transition: all 0.3s ease;
+        }
+        .experience-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
         }
 
         .experience-header {
@@ -583,6 +681,16 @@
             opacity: 1;
         }
 
+        /* 底部AI签名样式 */
+        .footer-signature {
+            text-align: center;
+            padding: 30px 0;
+            color: #8892b0;
+            font-size: 14px;
+            border-top: 1px solid rgba(200, 220, 240, 0.3);
+            margin-top: 50px;
+        }
+
         /* 动画效果 */
         @keyframes bounce {
             0%, 100% {
@@ -622,6 +730,10 @@
                 align-items: flex-start;
                 gap: 10px;
             }
+            
+            .ai-project-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
     <!-- 引入图标库 -->
@@ -637,6 +749,7 @@
             <a href="#about">关于</a>
             <a href="#education">教育</a>
             <a href="#skills">技能</a>
+            <a href="#ai-projects">AI能力</a> <!-- 新增AI能力导航 -->
             <a href="#experience">经历</a>
             <a href="#portfolio">作品</a>
             <a href="#contact">联系</a>
@@ -644,18 +757,20 @@
     </nav>
 
     <div class="container">
-        <!-- 英雄区 - Laurie改为黑色 -->
+        <!-- 英雄区 - Laurie改为黑色 + 新增AI Slogan -->
         <div class="hero">
             <h1>
                 <span class="english-part">Laurie</span>
                 <span class="chinese-part">叶晓婉</span>
             </h1>
             <p>培训实习生 | 人力资源管理 | 26届应届生</p>
+            <div class="ai-slogan">用 AI + 数字化工具，让培训运营更高效、更标准化</div>
             <div class="tag-group">
                 <div class="hero-tag">培训项目管理</div>
                 <div class="hero-tag">数字化工具落地</div>
                 <div class="hero-tag">内容创作</div>
                 <div class="hero-tag">数据分析</div>
+                <div class="hero-tag">AI工具应用</div> <!-- 新增AI标签 -->
             </div>
             <div class="scroll-down"></div>
         </div>
@@ -725,7 +840,7 @@
             </div>
         </section>
 
-        <!-- 技能板块 -->
+        <!-- 技能板块 - 移除AI辅助设计标签 -->
         <section id="skills" class="skills-section">
             <h2 class="section-title">技能能力</h2>
             <div class="skills-grid">
@@ -740,7 +855,7 @@
                         <span class="skill-tag">PPT制作</span>
                         <span class="skill-tag">企业微信</span>
                         <span class="skill-tag">飞书</span>
-                        <span class="skill-tag">AI学习力</span>
+                        <span class="skill-tag ai-tag">AI学习力</span> <!-- AI标签高亮 -->
                     </div>
                 </div>
                 <div class="skill-card">
@@ -766,6 +881,7 @@
                         <span class="skill-tag">秀米</span>
                         <span class="skill-tag">视频剪辑</span>
                         <span class="skill-tag">剪映</span>
+                        <span class="skill-tag ai-tag">AI文案优化</span> <!-- AI标签高亮 -->
                     </div>
                 </div>
                 <div class="skill-card">
@@ -778,6 +894,41 @@
                         <span class="skill-tag">多维表格</span>
                         <span class="skill-tag">SPSS</span>
                         <span class="skill-tag">CDA在考</span>
+                        <span class="skill-tag ai-tag">AI自动化报表</span> <!-- AI标签高亮 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 新增AI能力专区 -->
+        <section id="ai-projects" class="ai-section visible">
+            <h2 class="section-title">AI能力实践</h2>
+            <div class="ai-project-grid">
+                <!-- DISC测验网站 -->
+                <div class="ai-project-card">
+                    <h4><i class="fas fa-robot"></i> DISC测验网站（AI辅助）</h4>
+                    <div class="ai-project-desc">
+                        ✅ 仅限指定人群填写，限制访问范围<br>
+                        ✅ 统计用户选项数值，支持数据导出<br>
+                        ✅ 可自定义测试名称，前后端分离开发<br>
+                        ✅ 后端管理账号：test
+                    </div>
+                    <!-- 前端演示链接 -->
+                    <a href="https://laurieye1011.github.io/DISC.html" target="_blank" class="ai-project-link">前端演示</a>
+                    <!-- 后端管理链接（带账号参数） -->
+                    <a href="https://laurieye1011.github.io/DISCManagementDashboard.html?username=test" target="_blank" class="ai-project-link">后端管理</a>
+                </div>
+                <!-- 培训AI助手 -->
+                <div class="ai-project-card">
+                    <h4><i class="fas fa-chat-bubble"></i> 培训AI助手/经纪人AI小助手</h4>
+                    <div class="ai-project-desc">
+                        ✅ 撰写机器人角色设定，配置知识库<br>
+                        ✅ 优化AI交互逻辑，适配培训场景需求<br>
+                        ✅ 持续迭代优化，提升命令识别准确率
+                    </div>
+                    <div class="ai-project-problem">
+                        <strong>当前问题：</strong>关键命令识别有误，工作流权限未下放至部门导致卡壳<br>
+                        <strong>优化方向：</strong>协调权限配置，优化关键词识别规则，迭代角色设定
                     </div>
                 </div>
             </div>
@@ -832,7 +983,7 @@
             </div>
         </section>
 
-        <!-- 作品板块 -->
+        <!-- 作品板块 - 移除AI相关标签 -->
         <section id="portfolio" class="portfolio-section">
             <h2 class="section-title">作品集</h2>
             <div class="portfolio-grid">
@@ -841,9 +992,9 @@
                     <h4>海报设计</h4>
                     <p>协会招新/赛事宣传/培训证书/推文封面</p>
                 </div>
-                <!-- 修改：移除跳转，改为点击复制公众号名称 -->
-                <div class="portfolio-item" onclick="copyText('出发吧HR')">
-                    <div class="wechat-tip">微信公众号：出发吧HR（HRGO2025）</div>
+                <!-- 公众号卡片 - 仅复制不跳转 -->
+                <div class="portfolio-item" onclick="copyText('出发吧HR（HRGO2025）')" style="pointer-events: auto;">
+                    <div class="wechat-tip">点击复制公众号：出发吧HR（HRGO2025）</div>
                     <i class="fas fa-file-alt skill-icon"></i>
                     <h4>公众号推文</h4>
                     <p>5个月10篇原创内容</p>
@@ -861,7 +1012,7 @@
                 <div class="portfolio-item">
                     <i class="fas fa-table skill-icon"></i>
                     <h4>数据分析</h4>
-                    <p>绩效/薪酬/沙盘/人力盘点可视化</p>
+                    <p><span class="ai-tag">AI自动化报表</span> | 绩效/薪酬/沙盘/人力盘点可视化</p>
                 </div>
                 <div class="portfolio-item">
                     <i class="fas fa-bullhorn skill-icon"></i>
@@ -888,13 +1039,18 @@
                     <i class="fab fa-github"></i>
                     laurieye1011
                 </a>
-                <!-- 修改：点击复制VX号码（:后面的部分） -->
-                <a href="javascript:void(0)" class="contact-link" onclick="copyText('QQIwen0471')">
+                <!-- 微信复制按钮 -->
+                <a href="javascript:void(0);" class="contact-link" onclick="copyText('QQIwen0471'); return false;">
                     <i class="fab fa-weixin"></i>
                     VX：QQIwen0471
                 </a>
             </div>
         </section>
+
+        <!-- 底部AI驱动个人品牌签名 -->
+        <div class="footer-signature">
+            由 AI 辅助设计 | 个人作品集网站 | 26 届应届生
+        </div>
     </div>
 
     <!-- 复制成功提示框 -->
@@ -930,28 +1086,63 @@
                     nav.style.boxShadow = 'none';
                 }
             });
+
+            // 处理后端管理页面自动填充账号
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            if (username && username === 'test') {
+                // 等待页面加载完成后填充账号输入框
+                setTimeout(() => {
+                    const usernameInput = document.querySelector('input[name="username"], #username, .username-input');
+                    if (usernameInput) {
+                        usernameInput.value = 'test';
+                        // 可选：自动聚焦
+                        usernameInput.focus();
+                    }
+                }, 500);
+            }
         });
 
-        // 复制文本函数
-        function copyText(text) {
-            // 创建临时输入框
-            const tempInput = document.createElement('input');
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            // 选中并复制
-            tempInput.select();
-            document.execCommand('copy');
-            // 移除临时输入框
-            document.body.removeChild(tempInput);
-            
-            // 显示复制成功提示
-            const toast = document.getElementById('copyToast');
-            toast.classList.add('show');
-            // 2秒后隐藏提示
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
+        // 兼容移动端的复制函数
+        async function copyText(text) {
+            try {
+                // 优先使用现代Clipboard API（兼容移动端）
+                await navigator.clipboard.writeText(text);
+                
+                // 显示复制成功提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                // 2秒后隐藏提示
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            } catch (err) {
+                // 降级方案（兼容旧浏览器）
+                const tempInput = document.createElement('textarea');
+                tempInput.value = text;
+                // 防止移动端键盘弹出
+                tempInput.style.position = 'fixed';
+                tempInput.style.opacity = '0';
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                
+                // 显示提示
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }
         }
+
+        // 阻止所有复制元素的默认跳转行为
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.portfolio-item') || e.target.closest('.contact-link[onclick]')) {
+                e.preventDefault();
+            }
+        }, true);
     </script>
 </body>
 </html>
