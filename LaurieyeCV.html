@@ -462,10 +462,46 @@
             text-align: center;
             box-shadow: 0 8px 24px rgba(0,0,0,0.04);
             transition: transform 0.3s ease;
+            position: relative;
+            cursor: pointer;
         }
 
         .portfolio-item:hover {
             transform: translateY(-5px);
+        }
+
+        /* 公众号悬停提示样式 */
+        .portfolio-item .wechat-tip {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .portfolio-item .wechat-tip::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #333;
+        }
+
+        .portfolio-item:hover .wechat-tip {
+            opacity: 1;
         }
 
         .portfolio-item h4 {
@@ -682,7 +718,6 @@
                         <span class="skill-tag">Excel高级函数</span>
                         <span class="skill-tag">Word文档</span>
                         <span class="skill-tag">PPT制作</span>
-                        <span class="skill-tag">SPSS</span>
                         <span class="skill-tag">企业微信</span>
                         <span class="skill-tag">飞书</span>
                         <span class="skill-tag">AI学习力</span>
@@ -696,6 +731,7 @@
                     <div class="skill-tags">
                         <span class="skill-tag">可画</span>
                         <span class="skill-tag">创客贴</span>
+                        <span class="skill-tag">稿定设计</span>
                         <span class="skill-tag">海报设计</span>
                         <span class="skill-tag">文案撰写</span>
                     </div>
@@ -707,6 +743,7 @@
                     <h3>内容创作</h3>
                     <div class="skill-tags">
                         <span class="skill-tag">推文制作</span>
+                        <span class="skill-tag">秀米</span>
                         <span class="skill-tag">视频剪辑</span>
                         <span class="skill-tag">剪映</span>
                     </div>
@@ -719,6 +756,7 @@
                     <div class="skill-tags">
                         <span class="skill-tag">问卷设计</span>
                         <span class="skill-tag">多维表格</span>
+                        <span class="skill-tag">SPSS</span>
                         <span class="skill-tag">CDA在考</span>
                     </div>
                 </div>
@@ -783,7 +821,8 @@
                     <h4>海报设计</h4>
                     <p>协会招新/赛事宣传/培训证书/推文封面</p>
                 </div>
-                <div class="portfolio-item">
+                <div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s?__biz=HRGO2025', '_blank')">
+                    <div class="wechat-tip">微信公众号：出发吧HR（HRGO2025）</div>
                     <i class="fas fa-file-alt skill-icon"></i>
                     <h4>公众号推文</h4>
                     <p>5个月10篇原创内容</p>
