@@ -563,6 +563,26 @@
             transform: translateY(-3px);
         }
 
+        /* 复制成功提示框样式 */
+        .copy-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+        }
+
         /* 动画效果 */
         @keyframes bounce {
             0%, 100% {
@@ -821,7 +841,8 @@
                     <h4>海报设计</h4>
                     <p>协会招新/赛事宣传/培训证书/推文封面</p>
                 </div>
-                <div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s?__biz=HRGO2025', '_blank')">
+                <!-- 修改：移除跳转，改为点击复制公众号名称 -->
+                <div class="portfolio-item" onclick="copyText('出发吧HR')">
                     <div class="wechat-tip">微信公众号：出发吧HR（HRGO2025）</div>
                     <i class="fas fa-file-alt skill-icon"></i>
                     <h4>公众号推文</h4>
@@ -867,13 +888,17 @@
                     <i class="fab fa-github"></i>
                     laurieye1011
                 </a>
-                <a href="javascript:void(0)" class="contact-link">
+                <!-- 修改：点击复制VX号码（:后面的部分） -->
+                <a href="javascript:void(0)" class="contact-link" onclick="copyText('QQIwen0471')">
                     <i class="fab fa-weixin"></i>
                     VX：QQIwen0471
                 </a>
             </div>
         </section>
     </div>
+
+    <!-- 复制成功提示框 -->
+    <div class="copy-toast" id="copyToast">复制成功！</div>
 
     <script>
         // 滚动浮现动画
@@ -906,6 +931,27 @@
                 }
             });
         });
+
+        // 复制文本函数
+        function copyText(text) {
+            // 创建临时输入框
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            // 选中并复制
+            tempInput.select();
+            document.execCommand('copy');
+            // 移除临时输入框
+            document.body.removeChild(tempInput);
+            
+            // 显示复制成功提示
+            const toast = document.getElementById('copyToast');
+            toast.classList.add('show');
+            // 2秒后隐藏提示
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
     </script>
 </body>
 </html>
